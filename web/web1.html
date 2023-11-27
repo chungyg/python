@@ -1,11 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyFirstWeb</title>
+    <title>음료수 자판기</title>
 </head>
 <body>
-    안녕하세요
+    <div id="output"></div>
+    <div>
+        <label for="moneyInput">돈을 넣어주세요: </label>
+        <input type="number" id="moneyInput">
+        <button onclick="startVendingMachine()">자판기 시작</button>
+    </div>
+
+    <script>
+        async function startVendingMachine() {
+            let balance = 0;
+            let outputElement = document.getElementById("output");
+            let moneyInput = document.getElementById("moneyInput");
+
+            while (true) {
+                let a = parseInt(prompt("돈을 넣어주세요: "));
+                
+                if (isNaN(a)) {
+                    // 사용자가 취소 버튼을 누르면 프로그램 종료
+                    outputElement.innerHTML += '<p>프로그램 종료</p>';
+                    return;
+                }
+
+                balance += a;
+
+                if (balance >= 500) {
+                    let result = prompt("음료를 선택하세요 (1. 콜라500, 2. 사이다700, 3. 닥터페퍼1000, 4. 식혜1200, 5. 랜덤 음료수800): ");
+                    let drink, price;
+
+                    if (result === '1') {
+                        drink = '콜라';
+                        price = 500;
+                    } else if (result === '2') {
+                        drink = '사이다';
+                        price = 700;
+                    } else if (result === '3') {
+                        drink = '닥터페퍼';
+                        price = 1000;
+                    } else if (result === '4') {
+                        drink = '식혜';
+                        price = 1200;
+                    } else if (result === '5') {
+                        let drinks = ['콜라', '사이다', '닥터페퍼', '식혜'];
+                        drink = drinks[Math.floor(Math.random() * drinks.length)];
+                        price = 800;
+                        outputElement.innerHTML += `<p>랜덤 음료수가 선택되었습니다. 선택된 음료수: ${drink}</p>`;
+                    } else {
+                        outputElement.innerHTML += '<p>올바른 선택이 아닙니다.</p>';
+                        continue;
+                    }
+
+                    if (balance >= price) {
+                        balance -= price;
+                        outputElement.innerHTML += `<p>${drink}를 선택했습니다. 잔돈은 ${balance}원 입니다.</p>`;
+                    } else {
+                        outputElement.innerHTML += '<p>돈이 부족합니다.</p>';
+                        outputElement.innerHTML += `<p>현재 잔액: ${balance}</p>`;
+                    }
+
+                    let re1 = prompt(`현재 잔액은 ${balance}원 입니다. 다시 뽑으시겠습니까? (Y / N): `);
+                    if (re1 === null) {
+                        outputElement.innerHTML += '<p>프로그램 종료</p>';
+                        return;
+                    }
+
+                    if (re1.toLowerCase() === 'y') {
+                    } else if (re1.toLowerCase() === 'n') {
+                        let reExit = prompt("거스름돈을 돌려드릴까요? (Y / N): ");
+                        if (reExit === null) {
+                            outputElement.innerHTML += `<p>프로그램 종료</p>`;
+                            return;
+                        }
+
+                        if (reExit.toLowerCase() === 'y') {
+                            outputElement.innerHTML += `<p>거스름돈: ${balance}, 현재 잔액: 0</p>`;
+                            break;
+                        } else {
+                            outputElement.innerHTML += '<p>프로그램 재실행</p>';
+                            continue;
+                        }
+                    } else {
+                        outputElement.innerHTML += '<p>정확한 입력이 아닙니다.</p>';
+                    }
+                } else {
+                    outputElement.innerHTML += '<p>돈이 부족합니다.</p>';
+                    outputElement.innerHTML += `<p>현재 잔액: ${balance}</p>`;
+                }
+            }
+
+            let re2 = prompt("종료하시겠습니까? (Y / N): ");
+            if (re2 === null) {
+                outputElement.innerHTML += '<p>프로그램 종료</p>';
+                return;
+            }
+
+            if (re2.toLowerCase() === 'y') {
+                outputElement.innerHTML += '<p>프로그램 종료</p>';
+            } else if (re2.toLowerCase() === 'n') {
+                outputElement.innerHTML += '<p>프로그램 재실행</p>';
+            } else {
+                outputElement.innerHTML += '<p>정확한 입력이 아닙니다.</p>';
+            }
+        }
+    </script>
 </body>
 </html>
